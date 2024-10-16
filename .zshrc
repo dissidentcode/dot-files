@@ -1,4 +1,4 @@
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
+ export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
 
 export EDITOR=nvim
 
@@ -35,6 +35,9 @@ source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 # Load 'z', which tracks your most visited directories and allows quick navigation to them
 source $(brew --prefix)/etc/profile.d/z.sh
 
+# Set up fzf keybindings and fuzzy completion
+source <(fzf --zsh)
+
 # Configure how command completions are displayed and navigated
 zstyle ':completion:*' menu select
 # Configure how the command line tries to auto-correct and match your input
@@ -68,3 +71,5 @@ eval "$(starship init zsh)"
 quote_of_the_day=$(curl -s "https://zenquotes.io/api/today" | jq -r '.[0].q')
 echo "${bwhite}Quote of the day:${yellow}$quote_of_the_day"
 echo ""
+#vim keybinds
+bindkey -v

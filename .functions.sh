@@ -27,6 +27,20 @@ function acp() {
 	git push origin master
 }
 
+## NETWORK FUNCTIONS##
+
+#Currnt wifi network passwaork#
+
+wifi() {
+	local ssid=$(system_profiler SPAirPortDataType | awk '/Current Network Information:/{getline; print; exit}' | sed 's/^[[:space:]]*//;s/:$//')
+
+	if [[ -z "$ssid" || "$ssid" == "Not associated with any network" ]]; then
+		echo "No active Wi-Fi network found. Please ensure you're connected to a Wi-Fi network."
+	else
+		wifi-password "$ssid"
+	fi
+}
+
 ## MISCELLANEOUS FUNCTIONS ##
 
 #Symlink creation function that backs up a file or directory and then turns it into a symlink
