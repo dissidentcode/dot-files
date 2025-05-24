@@ -37,6 +37,7 @@ alias ll='lsd -AhFl --header --group-directories-first --git'
 alias ld='eza -lhmUDa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
 #exa files only alias with all the fixin's
 alias lf='eza -lXhmUfa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
+alias l2='eza --tree --level 2 --all --icons'
 #open aichat history in vscode
 alias chathistory='code $HOME/Library/Application\ Support/aichat/messages.md'
 #check network speed/quality
@@ -67,6 +68,8 @@ alias dustd='dust -D -d=1'
 alias psmem="ps aux | sort -nr -k 4 | head -11 | awk 'BEGIN { count=1; } NR==1 {print \"NO   USER               %CPU  %MEM    USAGE   COMMAND\"; print \"---- ------------------- ----- ------ ------- --------------------------------\"} NR > 1 {printf \"%-4d %-20s %-6s %-7s %-8s %s\n\", count++, \$1, \$3, \$4, \$6/1024, \$11; print \"---- ------------------- ----- ------ ------- --------------------------------\"}' | column -t"
 #full 'ps aux' output sorted by cpu (less cmd args, pid, and vsz) with dashed line row separators
 alias pscpu="ps aux | sort -nr -k 3 | head -11 | awk 'BEGIN { count=1; } NR==1 {print \"NO   USER               %CPU  %MEM    USAGE   COMMAND\"; print \"---- ------------------- ----- ------ ------- --------------------------------\"} NR > 1 {printf \"%-4d %-20s %-6s %-7s %-8s %s\n\", count++, \$1, \$3, \$4, \$6/1024, \$11; print \"---- ------------------- ----- ------ ------- --------------------------------\"}' | column -t"
+#remove all 0kb files from current directory (used to clean up auto-generated daily journal docs.)
+alias remove0="find * -type f -size 0 -exec trash {} +"
 ##Apps
 alias brave='open -a "Brave Browser.app"'
 alias logseq='open -a Logseq'
