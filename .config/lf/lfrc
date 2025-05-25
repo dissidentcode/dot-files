@@ -1,0 +1,24 @@
+set hidden
+set dirfirst
+set info file
+set preview true
+set previewer ~/git_repos/dot-files/zsh/.zsh-scripts/preview.sh
+
+set cleaner echo
+
+# Only move right into directories, not files
+map l %[ -d "$f" ] && lf -remote "send $id cd \"$f\""
+
+# Smart open command
+cmd open ${{
+  [ -d "$f" ] && exit
+  case $(file --mime-type -Lb "$f") in
+    text/*) $EDITOR "$f" ;;
+    image/*) open "$f" ;;
+    application/pdf) open "$f" ;;
+    *) open "$f" ;;
+  esac
+}}
+
+# Optional: bind 'o' to trigger it
+map o open
