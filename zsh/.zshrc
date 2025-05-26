@@ -37,14 +37,18 @@ source $(brew --prefix)/etc/profile.d/z.sh
 # Set up fzf keybindings and fuzzy completion
 source <(fzf --zsh)
 
+# --- Zsh History Configuration ---
 HISTFILE=~/.zsh_history
-HISTSIZE=5000
-SAVEHIST=10000
+HISTSIZE=20000
+SAVEHIST=20000
+
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
-setopt EXTENDED_HISTORY   
-# export HIST_STAMPS="mm/dd/yyyy"
+setopt APPEND_HISTORY
+setopt EXTENDED_HISTORY
 
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd history -a
 
 # Enable colored man pages for better readability
 export LESS_TERMCAP_mb=$'\E[01;31m'       # Begin blinking

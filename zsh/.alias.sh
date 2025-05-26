@@ -17,6 +17,7 @@ alias gd='git diff'
 alias rm='rm -v -I'
 alias c="clear && neofetch"
 alias r='clear && source ~/.zshrc'
+#alias h="cat $HISTFILE | cut -d';' -f2- | fzf --tac --no-sort"
 alias greph='cat ~/.zsh_history | cut -f2- -d";" | sort | uniq | grep -i'
 #alias greph='history | grep $1'
 alias grepa='alias | grep $1'
@@ -26,18 +27,20 @@ alias fgrep='grep -F --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.t
 alias mkcd='foo(){ mkdir -p "$1"; cd "$1" }; foo '
 alias md='mkdir'
 alias rmd='rmdir -v'
-alias del='rm -fr'
+alias del='trash'
 alias rms='rm -i -v'
-alias la='ls -A'
+alias la='ls -A1'
 alias ls='ls -G'
 alias l='ls -lah'
 #exa alias with all the fixin's
 alias ll='lsd -AhFl --header --group-directories-first --git'
 #exa directories only alias with all the fixin's
-alias ld='eza -lhmUDa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
+alias lld='eza -lhmUDa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
 #exa files only alias with all the fixin's
-alias lfe='eza -lXhmUfa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
+alias llf='eza -lXhmUfa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
 alias l2='eza --tree --level 2 --all --icons'
+alias l3='eza --tree --level 3 --all --icons'
+alias l4='eza --tree --level 4 --all --icons'
 #open aichat history in vscode
 alias chathistory='code $HOME/Library/Application\ Support/aichat/messages.md'
 #check network speed/quality
@@ -48,14 +51,18 @@ alias pb='pbcopy'
 alias notes="cd '$HOME/Personal/Logseq-PKB'"
 #Git repos directory shortcut
 alias repos="cd ~/git_repos"
+#dot-files directory
+alias dots="cd ~/git_repos/dot-files"
+#scripts directory
+alias scripts="cd ~/git_repos/dot-files/zsh/.zsh-scripts"
+#.zsh directory
+alias zsh="cd ~/.zsh"
 #Trash uses Finder trash instead of sysrem API to esure 'allow putback'
 alias trash='trash -F'
 #Tells you the password for the connected wifi, assuming you've already entered it at some point
 alias password='wifi-password'
 #Flush DNS cache - password needed
 alias dnsflush='sudo killall -HUP mDNSResponder && sudo killall mDNSResponderHelper && sudo dscacheutil -flushcache'
-#open zshrc config and MOTD in VS Code
-alias zshrc='code ~/.zshrc ~/.zsh/.alias.sh ~/.zsh/.motd.sh ~/.zsh/.functions.sh'
 #simplified 'du' with nice formatting
 alias dusage="du -hd 1 | sort -hr | awk 'BEGIN { print \"SIZE     DIRECTORY\"; print \"------------------\" } { print \$1, \$2 }'"
 #enhanced disk usage tool written in Rust; more intuitive than 'du' and avoids the UI aspect of 'ncdu'

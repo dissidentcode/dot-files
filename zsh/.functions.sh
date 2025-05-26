@@ -81,6 +81,35 @@ symlink() {
   echo "🔗 Linked $dest → $src"
 }
 
+#symlink creation function for directories
+symlink_dir() {
+  local link_path=$1
+  local real_path=$2
+
+  if [[ -z "$link_path" || -z "$real_path" ]]; then
+    echo "Usage: symlink_dir <link_path> <real_path>"
+    return 1
+  fi
+
+  mkdir -p "$(dirname "$link_path")" "$(dirname "$real_path")"
+
+  if [[ -d "$link_path" && ! -L "$link_path" ]]; then
+    local ts=$(date +"%Y%m%d%H%M%S")
+    echo "📦 Backing up $link_path → ${link_path}.backup.$ts"
+    cp -a "$link_path" "${link_path}.backup.$ts"
+
+    if [[ ! -e "$real_path" ]]; then
+      echo "📁 Moving $link_path → $real_path"
+      mv "$link_path" "$real_path"
+    else
+      echo "⚠️  $real_path already exists — skipping move"
+    fi
+  fi
+
+  ln -sfn "$real_path" "$link_path"
+  echo "🔗 Symlinked: $link_path → $real_path"
+}
+
 #fzf with preview functionality using lf preview script
 fp() {
   local file choice
@@ -110,6 +139,31 @@ fp() {
     read -r -p "Press enter to return to shell..."
   fi
 }
+
+#history search
+h() {
+  gawk -F';' '
+    BEGIN {
+      CYAN = "\033[36m"; RESET = "\033[0m"; GRAY = "\033[90m"
+      last_ts = ""
+    }
+    /^: [0-9]+:[0-9]+;/ {
+      ts = substr($1, 3)
+      cmd = $2
+      if (ts != last_ts) {
+        time = strftime("%-m/%-d/%y %I:%M %p", ts)
+        printf "%s%s%s │ %s\n", CYAN, time, RESET, cmd
+        last_ts = ts
+      } else {
+        printf "             │ %s\n", cmd
+      }
+    }
+    /^[^:]/ {
+      printf "%s(no timestamp)%s │ %s\n", GRAY, RESET, $0
+    }
+  ' "$HISTFILE" | fzf --tac --no-sort --ansi
+}
+
 #fp() {
 
 #  fzf --preview '~/git_repos/dot-files/zsh/.zsh-scripts/preview.sh {}' --preview-window=right:60%
