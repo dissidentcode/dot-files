@@ -43,6 +43,7 @@ wifi() {
 
 ## MISCELLANEOUS FUNCTIONS ##
 
+##Symlink creation function that backs up a file or directory and then turns it into a symlink
 symlink() {
   local dest="$1"
   local src="$2"
@@ -80,7 +81,40 @@ symlink() {
   echo "🔗 Linked $dest → $src"
 }
 
-##Symlink creation function that backs up a file or directory and then turns it into a symlink
+#fzf with preview functionality using lf preview script
+fp() {
+  local file choice
+
+  file=$(fzf --preview '~/git_repos/dot-files/zsh/.zsh-scripts/preview.sh {} 2>/dev/null' --preview-window=right:60%) || return
+
+  if [ -n "$file" ]; then
+    echo ""
+    echo "Open with:"
+    echo "  [1] macOS Preview (open)"
+    echo "  [2] Neovim        (nvim)"
+    echo "  [3] Less pager    (less)"
+    echo "  [4] Bat preview   (bat)"
+    echo "  [5] Cancel"
+    echo -n "Choose [1-5]: "
+    read -r choice
+
+    case "$choice" in
+    1) open "$file" 2>/dev/null ;;
+    2) nvim "$file" ;;
+    3) less "$file" ;;
+    4) bat "$file" ;;
+    *) echo "Aborted." ;;
+    esac
+
+    echo ""
+    read -r -p "Press enter to return to shell..."
+  fi
+}
+#fp() {
+
+#  fzf --preview '~/git_repos/dot-files/zsh/.zsh-scripts/preview.sh {}' --preview-window=right:60%
+#}
+
 #function symlink() {
 #  if [ -e "$1" ]; then
 #    # Create a timestamp for the backup

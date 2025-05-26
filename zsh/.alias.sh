@@ -36,7 +36,7 @@ alias ll='lsd -AhFl --header --group-directories-first --git'
 #exa directories only alias with all the fixin's
 alias ld='eza -lhmUDa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
 #exa files only alias with all the fixin's
-#alias lf='eza -lXhmUfa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
+alias lfe='eza -lXhmUfa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
 alias l2='eza --tree --level 2 --all --icons'
 #open aichat history in vscode
 alias chathistory='code $HOME/Library/Application\ Support/aichat/messages.md'
