@@ -48,7 +48,6 @@ setopt APPEND_HISTORY
 setopt EXTENDED_HISTORY
 
 autoload -Uz add-zsh-hook
-add-zsh-hook precmd history -a
 
 # Enable colored man pages for better readability
 export LESS_TERMCAP_mb=$'\E[01;31m'       # Begin blinking
@@ -82,7 +81,6 @@ function setup_menuselect_bindings {
   fi
 }
 zle -N setup_menuselect_bindings
-autoload -Uz add-zsh-hook
 add-zsh-hook precmd setup_menuselect_bindings
 
 #Fix backspace bug when switching modes
