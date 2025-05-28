@@ -42,7 +42,7 @@ add_newline = false
 # and use the os module below
 [username]
 show_always = true
-style_user = "bg:yellow"
+style_user = "fg:#FFFFFF bg:yellow"
 style_root = "bg:yellow"
 format = '[ $user ]($style)'
 disabled = false
@@ -50,18 +50,18 @@ disabled = false
 # An alternative to the username module which displays a symbol that
 # represents the current operating system
 [os]
-style = "bg:#d455d6"
+style = "fg:#FFFFFF bg:#d455d6"
 format = '[  ]($style)'
 disabled = false # Disabled by default
 
 [shell]
 disabled = false
-style = "bg:bright-red"
+style = "fg:#FFFFFF bg:bright-red"
 format = '[ $indicator ]($style)'
 
 [[battery.display]]
 threshold = 40
-style = "bg:bright-yellow"
+style = "fg:#FFFFFF bg:bright-yellow"
 
 [battery]
 charging_symbol = ''
@@ -72,7 +72,7 @@ empty_symbol = '󰂎'
 format = '[ $symbol $percentage ]($style)'
 
 [directory]
-style = "bg:blue"
+style = "fg:#FFFFFF bg:blue"
 format = "[   $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
@@ -111,27 +111,27 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
 symbol = " "
-style = "bg:green"
+style = "fg:#FFFFFF bg:green"
 format = '[ $symbol $context ]($style) $path'
 
 [elixir]
 symbol = ""
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [elm]
 symbol = " "
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [git_branch]
 symbol = ""
-style = "bg:bright-blue"
+style = "fg:#FFFFFF bg:bright-blue"
 format = '[ $symbol $branch ]($style)'
 
 [git_status]
@@ -141,63 +141,63 @@ up_to_date = '✓'
 
 [golang]
 symbol = ""
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [gradle]
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [haskell]
 symbol = ""
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [java]
 symbol = ""
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [julia]
 symbol = ""
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [nodejs]
 symbol = ""
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [nim]
 symbol = "󰆥"
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [rust]
 symbol = ""
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [scala]
 symbol = ""
-style = "bg:bright-cyan"
+style = "fg:#FFFFFF bg:bright-cyan"
 format = '[ $symbol ($version) ]($style)'
 
 [memory_usage]
 disabled = false
 threshold = 65
 symbol = '󰍛'
-style = "bg:green"
+style = "fg:#FFFFFF bg:green"
 format = '[ $symbol $ram_pct ]($style)'
 
 [time]
 disabled = false
 time_format = "%I:%M" #Hour:Minute Format
-style = "bg:bright-green"
+style = "fg:#FFFFFF bg:bright-green"
 format = '[ $time ]($style)'
 
 [status]
-style = "bg:black"
+style = "fg:#FFFFFF bg:black"
 symbol = ''
 success_symbol = ''
 not_executable_symbol = ''

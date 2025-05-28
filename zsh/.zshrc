@@ -1,6 +1,8 @@
  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
 
-export EDITOR=nvim
+ export SHELL="/opt/homebrew/bin/zsh"
+
+ export EDITOR=nvim
 #Changes where Go looks for packages on ARM chip
 export CGO_CFLAGS="-I$(brew --prefix)/include"
 export CGO_LDFLAGS="-L$(brew --prefix)/lib"
@@ -12,12 +14,12 @@ precmd() { vcs_info }
 
 # Customize the version control information format for git repositories
 # This sets the branch name to appear in red and the git icon in yellow
-zstyle ':vcs_info:git:*' formats '%F{yellow}  󰘬 %f%F{yellow}%b %f'
+zstyle ':vcs_info:git:*' formats '%F{yellow}  󰘬 %f%F{reset}{yellow}%b %f' {reset}
  
 # Configure the prompt appearance
 # Displays an arrow, the directory path, the git branch, and a symbol before the cursor
-setopt PROMPT_SUBST
-PROMPT='%F{magenta}%f %F{yellow} %f%F{green}%n%f %F{yellow} %f %F{blue}${PWD/#$HOME/~}%f ${vcs_info_msg_0_}%F{magenta} %f'
+#setopt PROMPT_SUBST
+#PROMPT='%F{magenta}%f %F{reset}{yellow} %f%F{green}%n%f %F{reset}{yellow} %f %F{reset}{blue}${PWD/#$HOME/~}%f ${vcs_info_msg_0_}%F{reset}{magenta}{reset} %f'
 
 # Set directory and file color scheme for 'ls' and 'grep' commands
 export LSCOLORS=ExFxBxDxCxegedabagacad
@@ -107,16 +109,31 @@ zle-line-init() {
 zle -N zle-line-init
 
 echo -ne '\e[5 q' #Use beam shape cursor on startup
-preexec() { echo -ne '\e[5 q' ;} #Use beam shape cursor for each new prompt
+preexec() { echo -ne '\e[5 q' ;} #Use beam shape cursor for each new PROMPT
+
+bwhite="\u001b[97;1m"
+yellow="\033[33m"
 
 # Custom scripts for additional configuration
-source ~/.zsh/.motd.sh      # Load a custom message of the day script
 source ~/.zsh/.alias.sh     # Load a custom aliases script
 source ~/.zsh/.functions.sh # Load a custom functions script
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
 
+bwhite=
+
 # Fetch and display Quote of the Day
 quote_of_the_day=$(curl -s "https://zenquotes.io/api/today" | jq -r '.[0].q')
-echo "${bwhite}Quote of the day:${yellow}$quote_of_the_day"
-echo ""
+echo "${bwhite}Quote of the day:${reset}${yellow}$quote_of_the_day"${reset}
+
+source ~/.zsh/.motd.sh      # Load a custom message of the day script
+
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  cwd=$(<"$tmp")
+  if [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
