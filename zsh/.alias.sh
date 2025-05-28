@@ -1,4 +1,7 @@
 ## ALIASES ##
+alias nvalias='nvim ~/.zsh/.alias.sh'
+alias nvfunctions='nvim ~/.zsh/.functions.sh'
+alias nvzshrc='nvim ~/.zshrc'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -17,9 +20,6 @@ alias gd='git diff'
 alias rm='rm -v -I'
 alias c="clear && neofetch"
 alias r='clear && source ~/.zshrc'
-#alias h="cat $HISTFILE | cut -d';' -f2- | fzf --tac --no-sort"
-alias greph='cat ~/.zsh_history | cut -f2- -d";" | sort | uniq | grep -i'
-#alias greph='history | grep $1'
 alias grepa='alias | grep $1'
 alias grep='grep --color=auto'
 alias egrep='grep -E --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}'
@@ -31,10 +31,10 @@ alias del='trash'
 alias rms='rm -i -v'
 alias la='ls -A1'
 alias ls='ls -G'
-alias l='ls -lah'
-#exa alias with all the fixin's
+alias l='ls -lAFh'
+#lsd alias with all the fixin's
 alias ll='lsd -AhFl --header --group-directories-first --git'
-#exa directories only alias with all the fixin's
+#eza directories only alias with all the fixin's
 alias lld='eza -lhmUDa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
 #exa files only alias with all the fixin's
 alias llf='eza -lXhmUfa --icons --git --no-user --color-scale-mode=gradient --no-quotes --color-scale=all --no-filesize'
@@ -53,14 +53,14 @@ alias notes="cd '$HOME/Personal/Logseq-PKB'"
 alias repos="cd ~/git_repos"
 #dot-files directory
 alias dots="cd ~/git_repos/dot-files"
+#zsh scripts directory
+alias zshscripts="cd ~/git_repos/dot-files/zsh/.zsh-scripts"
 #scripts directory
-alias scripts="cd ~/git_repos/dot-files/zsh/.zsh-scripts"
+alias scripts="cd ~/scripts"
 #.zsh directory
 alias zsh="cd ~/.zsh"
 #Trash uses Finder trash instead of sysrem API to esure 'allow putback'
 alias trash='trash -F'
-#Tells you the password for the connected wifi, assuming you've already entered it at some point
-alias password='wifi-password'
 #Flush DNS cache - password needed
 alias dnsflush='sudo killall -HUP mDNSResponder && sudo killall mDNSResponderHelper && sudo dscacheutil -flushcache'
 #simplified 'du' with nice formatting
@@ -88,4 +88,3 @@ alias gpt='open -a chatGPT'
 alias mt='open -a Monkeytype'
 alias clean='open -a CleanMyMac-MAS'
 alias messages='open -a Messages'
-alias qb='open -a qBittorrent'
