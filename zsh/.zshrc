@@ -53,6 +53,8 @@ autoload -Uz add-zsh-hook
 
 # Enable colored man pages for better readability
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+# Disable macos gatekeeper function on application launch
+export HOMEBREW_CASK_OPTS="--no quarantine"
 
 #vim keybinds
 bindkey -v
