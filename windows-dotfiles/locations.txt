@@ -1,0 +1,42 @@
+# File Locations
+aliases.ps1 ; C:\Users\Diissiident\.powershell\
+functions.ps1 ; C:\Users\Diissiident\.powershell\
+Microsoft.PowerShell_profile.ps1 ; C:\Users\Diissiident\Documents\PowerShell\
+config.ps1 (winfetch config file) ; C:\Users\Diissiident\.config\winfetch\
+scoop\ ; C:\Users\Diissiident\.config\
+winfetch\ ; C:\Users\Diissiident\.config\
+nvim\ ; C:\Users\Diissiident\.config\
+
+#Scoop info
+>>> scoop list
+Installed apps:
+
+Name          Version Source Updated             Info
+----          ------- ------ -------             ----
+7zip          24.09   main   2025-05-30 18:53:00
+bat           0.25.0  main   2025-05-30 18:53:14
+coreutils     5.97.3  main   2025-05-30 18:53:07
+dust          1.2.0   main   2025-05-30 18:52:15
+eza           0.21.4  main   2025-05-30 18:52:14
+findutils     4.4.2   main   2025-05-30 18:53:03
+fzf           0.62.0  main   2025-05-30 18:53:13
+gawk          5.3.2   main   2025-05-30 18:53:11
+glow          2.1.1   main   2025-05-30 19:15:05
+grep          3.11    main   2025-05-30 18:52:15
+lsd           1.1.5   main   2025-05-30 18:51:36
+ripgrep       14.1.1  main   2025-05-30 19:14:53
+speedtest-cli 1.2.0   main   2025-05-30 20:09:20
+tldr          0.6.1   main   2025-05-30 19:14:32
+trashy        2.0.0   main   2025-05-30 18:47:52
+win32yank     0.1.1   main   2025-05-30 18:53:12
+yazi          25.5.31 main   2025-05-30 19:14:02
+
+#Winget Info
+starship               Starship.Starship      1.23.0                           winget
+Neovim                 Neovim.Neovim          0.11.1             0.11.2        winget
+PowerShell 7-x64       Microsoft.PowerShell   7.5.1.0                          winget
+Git                    Git.Git                2.49.0                           winget
+JetBrainsMono Nerd Fo… DEVCOM.JetBrainsMonoN… 3.3.0                            winget
+zoxide                 ajeetdsouza.zoxide     0.9.7              0.9.8         winget
+tealdeer               dbrgn.tealdeer         1.7.2                            winget
+fd                     sharkdp.fd             10.2.0                           winget
