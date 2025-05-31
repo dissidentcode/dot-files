@@ -1,4 +1,5 @@
 # File Locations
+starship.toml ; C:\Users\Diissiident\AppData\Local\
 aliases.ps1 ; C:\Users\Diissiident\.powershell\
 functions.ps1 ; C:\Users\Diissiident\.powershell\
 Microsoft.PowerShell_profile.ps1 ; C:\Users\Diissiident\Documents\PowerShell\
@@ -7,7 +8,8 @@ scoop\ ; C:\Users\Diissiident\.config\
 winfetch\ ; C:\Users\Diissiident\.config\
 nvim\ ; C:\Users\Diissiident\.config\
 
-#Scoop info
+
+#Scoop info:
 >>> scoop list
 Installed apps:
 
