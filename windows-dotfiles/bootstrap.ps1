@@ -56,12 +56,26 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
         exit 1
     }
     winget install --id Git.Git -e --source winget
+
+    # Check again for Git, now that it may be installed
     if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-        Write-Host "Git install failed. Please install manually, then rerun this script." -ForegroundColor Red
-        exit 1
+        # Only try relaunching once to avoid infinite loops
+        if (-not $env:DOTFILES_BOOTSTRAP_RELAUNCHED) {
+            Write-Highlight "Relaunching PowerShell so Git is recognized..."
+            # Set a flag so we only relaunch once
+            $env:DOTFILES_BOOTSTRAP_RELAUNCHED = "1"
+            # Re-run the script in a new process
+            Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $ScriptSelf
+            exit 0
+        } else {
+            Write-Host @"
+Git was installed, but this PowerShell session still does not see it.
+Please close this window, open a NEW PowerShell window, and rerun this script.
+"@ -ForegroundColor Yellow
+            exit 1
+        }
     }
 }
-
 # --- Clone dotfiles repo if needed ---
 if (-not (Test-Path $DotfilesDir)) {
     Write-Highlight "Cloning dotfiles repo to $DotfilesDir"
