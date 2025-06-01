@@ -11,6 +11,7 @@ grep
 lsd
 llvm
 mingw
+nodejs-lts
 ripgrep
 speedtest-cli
 win32yank
