@@ -1,7 +1,7 @@
 # Edit your PowerShell alias and function files in Neovim
-Function nvalias { & "C:\Program Files\Neovim\bin\nvim.exe" "$HOME\.powershell\aliases.ps1" }
-Function nvfunctions { & "C:\Program Files\Neovim\bin\nvim.exe" "$HOME\.powershell\functions.ps1" }
-Function nvprofile { & "C:\Program Files\Neovim\bin\nvim.exe" "$PROFILE" }
+Function nvalias { & "C:\Users\NK\scoop\shims\nvim.exe" "$HOME\.powershell\aliases.ps1" }
+Function nvfunctions { & "C:\Users\NK\scoop\shims\nvim.exe" "$HOME\.powershell\functions.ps1" }
+Function nvprofile { & "C:\Users\NK\scoop\shims\nvim.exe" "$PROFILE" }
 Function mkcd { param($dir) mkdir $dir -Force; Set-Location $dir }
 #Function winfetch { & "$HOME\Documents\PowerShell\Scripts\winfetch.ps1" }
 Function admin { Start-Process "wt.exe" -Verb RunAs -ArgumentList "new-tab -p 'PowerShell'" }
