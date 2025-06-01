@@ -18,3 +18,6 @@ starship
 neovim
 JetBrainsMono-NF
 zoxide
+winfetch
+extras/vcredist2022
+

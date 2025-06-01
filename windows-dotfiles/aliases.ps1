@@ -3,7 +3,7 @@ Function nvalias { & "C:\Program Files\Neovim\bin\nvim.exe" "$HOME\.powershell\a
 Function nvfunctions { & "C:\Program Files\Neovim\bin\nvim.exe" "$HOME\.powershell\functions.ps1" }
 Function nvprofile { & "C:\Program Files\Neovim\bin\nvim.exe" "$PROFILE" }
 Function mkcd { param($dir) mkdir $dir -Force; Set-Location $dir }
-Function winfetch { & "$HOME\Documents\PowerShell\Scripts\winfetch.ps1" }
+#Function winfetch { & "$HOME\Documents\PowerShell\Scripts\winfetch.ps1" }
 Function admin { Start-Process "wt.exe" -Verb RunAs -ArgumentList "new-tab -p 'PowerShell'" }
 
 # Quick directory navigation
