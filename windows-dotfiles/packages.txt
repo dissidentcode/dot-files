@@ -9,6 +9,7 @@ gawk
 glow
 grep
 lsd
+llvm
 ripgrep
 speedtest-cli
 win32yank
