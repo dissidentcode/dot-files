@@ -65,8 +65,8 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
             # Set a flag so we only relaunch once
             $env:DOTFILES_BOOTSTRAP_RELAUNCHED = "1"
             # Re-run the script in a new process
-            Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $ScriptSelf
-            exit 0
+            Start-Process -FilePath "powershell.exe" -ArgumentList "-NoExit", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$ScriptSelf`""
+exit 0
         } else {
             Write-Host @"
 Git was installed, but this PowerShell session still does not see it.
@@ -203,9 +203,9 @@ function New-SafeSymlink {
     param([string]$Source, [string]$Target)
     # Expand both %USERPROFILE% and $HOME
     $Source = $Source -replace "%USERPROFILE%", $env:USERPROFILE
-    $Source = $Source -replace "\$HOME", $env:USERPROFILE
+    $Source = $Source.Replace('$HOME', $env:USERPROFILE)
     $Target = $Target -replace "%USERPROFILE%", $env:USERPROFILE
-    $Target = $Target -replace "\$HOME", $env:USERPROFILE
+    $Target = $Target.Replace('$HOME', $env:USERPROFILE)
 
     # If $Source is not an absolute path, treat it as relative to $WindowsDotfilesDir
     if (!(Split-Path $Source -IsAbsolute)) {
@@ -257,6 +257,35 @@ function Create-SymlinksFromProp {
     }
 }
 Create-SymlinksFromProp $LinksProp
+
+# Path to Windows Terminal settings
+$wtSettings = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
+
+if (Test-Path $wtSettings) {
+    $settings = Get-Content $wtSettings -Raw | ConvertFrom-Json
+
+    $changed = $false
+
+    foreach ($profile in $settings.profiles.list) {
+        # Try to match PowerShell 7 (pwsh)
+        if ($profile.name -match "PowerShell" -or $profile.commandline -match "pwsh") {
+            if ($profile.font -eq $null) { $profile | Add-Member -MemberType NoteProperty -Name font -Value @{} }
+            $profile.font.face = "JetBrainsMono Nerd Font"
+            $changed = $true
+        }
+    }
+
+    if ($changed) {
+        $settings | ConvertTo-Json -Depth 100 | Set-Content -Path $wtSettings
+        Write-Host "Set font to 'JetBrainsMono Nerd Font' for PowerShell profiles in Windows Terminal."
+        Write-Host "Please close and reopen all Windows Terminal windows for the font change to take effect."
+    } else {
+        Write-Host "Could not find a PowerShell profile in Windows Terminal settings."
+    }
+} else {
+    Write-Host "Windows Terminal settings.json not found. Skipping font configuration."
+}
+
 
 # --- All done ---
 Write-Host @"
