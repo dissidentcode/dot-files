@@ -2,7 +2,7 @@
 windows-dotfiles/aliases.ps1=$HOME/.powershell/aliases.ps1
 windows-dotfiles/functions.ps1=$HOME/.powershell/functions.ps1
 windows-dotfiles/config.ps1=$HOME/.powershell/config.ps1
-windows-dotfiles/starship.toml=$HOME/.config/starship.toml
+windows-dotfiles/starship.toml=$HOME/AppData/Local/starship.toml
 windows-dotfiles/locations.txt=$HOME/.powershell/locations.txt
 windows-dotfiles/Microsoft.PowerShell_profile.ps1=$HOME/Documents/PowerShell/Microsoft.PowerShell_profile.ps1
 windows-dotfiles/nvim=$HOME/AppData/Local/nvim

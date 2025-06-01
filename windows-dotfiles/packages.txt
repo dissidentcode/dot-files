@@ -1,0 +1,23 @@
+7zip          
+bat           
+uutils-coreutils     
+dust          
+eza           
+findutils     
+fzf           
+gawk          
+glow          
+grep          
+lsd          
+ripgrep       
+speedtest-cli                   
+win32yank   
+yazi         
+tealdeer            
+starship            
+Neovim
+Git       
+JetBrainsMono Nerd Font 
+zoxide  
+
+      
