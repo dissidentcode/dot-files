@@ -28,16 +28,13 @@
 ================================================================================
 #>
 
-# ---- Constants & Paths ----
-$ErrorActionPreference = 'Stop'
+# ---- Set constants and paths ----
 $DotfilesRepo = "https://github.com/dissidentcode/dot-files.git"
-$DotfilesDir = "$env:USERPROFILE\dot-files"
+$DotfilesDir = "$env:USERPROFILE\.dotfiles"
 $WindowsDotfilesDir = "$DotfilesDir\windows-dotfiles"
 $LinksProp = "$WindowsDotfilesDir\links.prop"
 $PackagesFile = "$WindowsDotfilesDir\packages.txt"
 $LogFile = "$env:USERPROFILE\dotfiles-setup.log"
-$PS7Exe = "$env:ProgramFiles\PowerShell\7\pwsh.exe"
-$ScriptSelf = "$WindowsDotfilesDir\bootstrap.ps1"
 
 function Write-Log ($msg) {
     $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -48,17 +45,7 @@ function Write-Highlight ($msg) {
     Write-Log $msg
 }
 
-# --- Check for required files ---
-if (-not (Test-Path $LinksProp)) {
-    Write-Host "Missing links.prop at $LinksProp! Please ensure your dotfiles repo is up to date." -ForegroundColor Red
-    exit 1
-}
-if (-not (Test-Path $PackagesFile)) {
-    Write-Host "Missing packages.txt at $PackagesFile! Please ensure your dotfiles repo is up to date." -ForegroundColor Red
-    exit 1
-}
-
-# --- Git check ---
+# --- Ensure Git is present ---
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     Write-Highlight "Git not found. Installing via winget..."
     if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
@@ -72,14 +59,35 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     }
 }
 
-# --- Clone dotfiles repo ---
+# --- Clone dotfiles repo if needed ---
 if (-not (Test-Path $DotfilesDir)) {
     Write-Highlight "Cloning dotfiles repo to $DotfilesDir"
     git clone $DotfilesRepo $DotfilesDir
+    if (-not (Test-Path $DotfilesDir)) {
+        Write-Host "Failed to clone repo! Check your internet and rerun script." -ForegroundColor Red
+        exit 1
+    }
+    attrib +h $DotfilesDir  # Set hidden attribute
 } else {
-    Write-Log "dot-files repo already present at $DotfilesDir. Skipping clone."
+    # Repo exists; check that it's a valid git repo
+    if (-not (Test-Path (Join-Path $DotfilesDir ".git"))) {
+        Write-Host "The folder $DotfilesDir exists but is not a git repo! Please move or delete it and rerun this script." -ForegroundColor Red
+        exit 1
+    }
+    # Optionally refresh hidden attribute
+    attrib +h $DotfilesDir
+    Write-Log ".dotfiles repo already present at $DotfilesDir. Skipping clone."
 }
 
+# --- Now check for required files (AFTER clone) ---
+if (-not (Test-Path $LinksProp)) {
+    Write-Host "Missing links.prop at $LinksProp! Please ensure your dotfiles repo is up to date." -ForegroundColor Red
+    exit 1
+}
+if (-not (Test-Path $PackagesFile)) {
+    Write-Host "Missing packages.txt at $PackagesFile! Please ensure your dotfiles repo is up to date." -ForegroundColor Red
+    exit 1
+}
 # --- PowerShell 7 check & switch ---
 if (-not (Test-Path $PS7Exe)) {
     Write-Highlight "PowerShell 7 not found. Installing via winget..."
