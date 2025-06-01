@@ -36,6 +36,9 @@ $LinksProp = "$WindowsDotfilesDir\links.prop"
 $PackagesFile = "$WindowsDotfilesDir\packages.txt"
 $LogFile = "$env:USERPROFILE\dotfiles-setup.log"
 
+$PS7Exe = "$env:ProgramFiles\PowerShell\7\pwsh.exe"
+$ScriptSelf = $MyInvocation.MyCommand.Path
+
 function Write-Log ($msg) {
     $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     "$ts $msg" | Tee-Object -FilePath $LogFile -Append
@@ -184,9 +187,19 @@ Install-ScoopPackages $PackagesFile
 # --- Symlinks ---
 function New-SafeSymlink {
     param([string]$Source, [string]$Target)
-    # Expand env vars
+    # Expand both %USERPROFILE% and $HOME
     $Source = $Source -replace "%USERPROFILE%", $env:USERPROFILE
+    $Source = $Source -replace "\$HOME", $env:USERPROFILE
     $Target = $Target -replace "%USERPROFILE%", $env:USERPROFILE
+    $Target = $Target -replace "\$HOME", $env:USERPROFILE
+
+    # If $Source is not an absolute path, treat it as relative to $WindowsDotfilesDir
+    if (!(Split-Path $Source -IsAbsolute)) {
+    # Remove leading "windows-dotfiles/" from the path if present
+    $RelSource = $Source -replace "^(windows-dotfiles[/\\])", ""
+    $Source = Join-Path $WindowsDotfilesDir $RelSource
+}
+
     if (-not (Test-Path $Source)) {
         Write-Host "Source $Source does not exist, skipping." -ForegroundColor Red
         Write-Log "MISSING: $Source for $Target"
