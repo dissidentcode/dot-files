@@ -31,190 +31,171 @@
 ================================================================================
 #>
 
+<#
 .SYNOPSIS
-    Bootstrap your dotfiles and dev environment on a fresh Windows 11 machine.
+    Bootstrap your Windows development environment using dotfiles.
 .DESCRIPTION
-    - Installs Git if missing
-    - Clones your dotfiles repo if missing
-    - Installs PowerShell 7 if missing, prompts user to re-launch script in pwsh 7
-    - Enables Developer Mode for symlink support (admin required)
-    - Installs Scoop as user, then installs packages from scoop-apps.txt
-    - Symlinks config files per locations.txt (idempotent, with backups)
-    - Prompts user exactly when to switch shell, log out, etc
+    - Installs Git if missing.
+    - Clones dotfiles repository.
+    - Installs PowerShell 7 if missing and prompts for shell restart.
+    - Enables Developer Mode for symlink support.
+    - Installs Scoop and required packages.
+    - Creates symlinks as defined in links.prop.
 .NOTES
-    Run this as a normal (non-admin) user in Windows PowerShell 5
+    Run this script in Windows PowerShell (not as Administrator).
 #>
 
-# ------------- CONSTANTS --------------
-$DotfilesRepoUrl = "https://github.com/dissidentcode/dot-files"
+# Define paths
+$DotfilesRepo = "https://github.com/dissidentcode/dot-files.git"
 $DotfilesDir = "$env:USERPROFILE\dot-files"
 $WindowsDotfilesDir = "$DotfilesDir\windows-dotfiles"
-$ScoopAppsFile = "$WindowsDotfilesDir\scoop-apps.txt"
-$LocationsFile = "$WindowsDotfilesDir\locations.txt"
-$LogFile = "$env:USERPROFILE\dotfiles-setup.log"
-$PS7Exe = "$env:ProgramFiles\PowerShell\7\pwsh.exe"
-$ScriptSelf = "$WindowsDotfilesDir\setup.ps1"
+$LinksProp = "$WindowsDotfilesDir\links.prop"
+$PackagesFile = "$WindowsDotfilesDir\packages.txt"
 
-# ------------- HELPERS ---------------
-function Write-Log ($msg) {
-    $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    "$ts $msg" | Tee-Object -FilePath $LogFile -Append
-}
-function Write-Highlight ($msg) {
-    Write-Host "`n*** $msg ***`n" -ForegroundColor Yellow
-    Write-Log $msg
-}
-function Prompt-Continue ($msg) {
-    Write-Highlight $msg
-    Read-Host "Press [Enter] to continue..."
-}
-
-# ------------- STEP 1: Git -------------
-if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-Highlight "Git not found. Installing with winget..."
-    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-        Write-Host "winget not found! Please install Git manually and rerun this script." -ForegroundColor Red
-        exit 1
-    }
-    winget install --id Git.Git -e --source winget
+# Function to install Git if missing
+function Install-Git {
     if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-        Write-Host "Git install failed. Please install manually, then rerun this script." -ForegroundColor Red
-        exit 1
+        Write-Host "Git not found. Installing via winget..."
+        winget install --id Git.Git -e --source winget
+    } else {
+        Write-Host "Git is already installed."
     }
 }
 
-# ------------- STEP 2: Clone Repo -------------
-if (-not (Test-Path $DotfilesDir)) {
-    Write-Highlight "Cloning dotfiles repo to $DotfilesDir"
-    git clone $DotfilesRepoUrl $DotfilesDir
+# Function to clone dotfiles repository
+function Clone-Dotfiles {
     if (-not (Test-Path $DotfilesDir)) {
-        Write-Host "Failed to clone repo! Check your internet and rerun script." -ForegroundColor Red
-        exit 1
-    }
-} else {
-    Write-Log "dot-files repo already present at $DotfilesDir. Skipping clone."
-}
-
-# ------------- STEP 3: PowerShell 7 -------------
-if (-not (Test-Path $PS7Exe)) {
-    Write-Highlight "Installing PowerShell 7 with winget..."
-    winget install --id Microsoft.Powershell --source winget
-    if (-not (Test-Path $PS7Exe)) {
-        Write-Host "PowerShell 7 install failed. Please install manually, then rerun this script." -ForegroundColor Red
-        exit 1
+        Write-Host "Cloning dotfiles repository..."
+        git clone $DotfilesRepo $DotfilesDir
+    } else {
+        Write-Host "Dotfiles repository already exists."
     }
 }
 
-# ------------- STEP 3b: Relaunch in PowerShell 7 -------------
-if (-not ($PSVersionTable.PSEdition -eq "Core")) {
-    Write-Highlight "Now launching setup in PowerShell 7..."
-    # Use pwsh 7 to rerun this script, pass state var to skip previous steps
-    & "$PS7Exe" "-NoProfile" "-ExecutionPolicy" "Bypass" "-File" "$ScriptSelf" "from-pwsh7"
-    exit 0
+# Function to install PowerShell 7 if missing
+function Install-PowerShell7 {
+    if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
+        Write-Host "PowerShell 7 not found. Installing via winget..."
+        winget install --id Microsoft.Powershell --source winget
+        Write-Host "Please restart the shell using 'pwsh' and re-run this script."
+        exit
+    } else {
+        Write-Host "PowerShell 7 is already installed."
+    }
 }
 
-# ------------- Only reached in pwsh7 -----------------
-param([string]$Pwsh7 = "")
+# Function to enable Developer Mode
+function Enable-DeveloperMode {
+    $DevModeKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
+    $DevModeName = "AllowDevelopmentWithoutDevLicense"
+    $DevModeValue = Get-ItemProperty -Path $DevModeKey -Name $DevModeName -ErrorAction SilentlyContinue
 
-Write-Log "Running in PowerShell 7."
-
-# ------------- STEP 4: Enable Developer Mode -------------
-function Is-DevMode {
-    $k = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -ErrorAction SilentlyContinue
-    return $k.AllowDevelopmentWithoutDevLicense -eq 1
-}
-if (-not (Is-DevMode)) {
-    Write-Highlight "Developer Mode is not enabled. This is required to make symlinks without admin."
-    Write-Highlight "You'll be prompted for admin rights. After enabling, you must log out (or reboot), then rerun this script."
-    Start-Process powershell "-NoProfile -Command `"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock' -Name 'AllowDevelopmentWithoutDevLicense' -Value 1`"" -Verb RunAs
-    Write-Host "`nDeveloper Mode set. Please log out and log back in (or reboot) before continuing. Then rerun this script from PowerShell 7 (`pwsh`)." -ForegroundColor Yellow
-    exit 0
+    if ($DevModeValue.$DevModeName -ne 1) {
+        Write-Host "Enabling Developer Mode..."
+        Start-Process powershell -ArgumentList "-Command Set-ItemProperty -Path '$DevModeKey' -Name '$DevModeName' -Value 1" -Verb RunAs
+        Write-Host "Developer Mode enabled. Please log out and log back in, then re-run this script."
+        exit
+    } else {
+        Write-Host "Developer Mode is already enabled."
+    }
 }
 
-# ------------- STEP 5: Scoop install -------------
-if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
-    Write-Highlight "Installing Scoop as current user (must NOT be admin)..."
-    Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-    irm get.scoop.sh | iex
+# Function to install Scoop
+function Install-Scoop {
     if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
-        Write-Host "Scoop failed to install. Please check https://scoop.sh/ and rerun script." -ForegroundColor Red
-        exit 1
+        Write-Host "Installing Scoop..."
+        Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+        iwr -useb get.scoop.sh | iex
+    } else {
+        Write-Host "Scoop is already installed."
     }
-} else {
-    Write-Log "Scoop already installed."
 }
 
-# ------------- STEP 6: Scoop Apps -------------
-if (Test-Path $ScoopAppsFile) {
-    Write-Highlight "Installing Scoop packages from $ScoopAppsFile..."
-    Get-Content $ScoopAppsFile | ForEach-Object {
-        $app = $_.Trim()
-        if ($app -and -not ($app.StartsWith("#"))) {
-            if (-not (scoop list | Select-String -Pattern ("^" + [regex]::Escape($app) + "\b"))) {
-                Write-Log "Installing $app via scoop..."
-                scoop install $app
-            } else {
-                Write-Log "$app already installed via scoop."
-            }
-        }
-    }
-} else {
-    Write-Host "Scoop apps list file not found at $ScoopAppsFile, skipping." -ForegroundColor Yellow
-}
-
-# ------------- STEP 7: Symlink Dotfiles -------------
-function New-SafeSymlink {
-    param([string]$Target, [string]$Source)
-    if (-not (Test-Path $Source)) {
-        Write-Host "Source $Source does not exist, skipping." -ForegroundColor Red
-        return
-    }
-    if (Test-Path $Target) {
-        if ((Get-Item $Target).LinkType -eq "SymbolicLink" -and (Get-Item $Target).Target -eq $Source) {
-            Write-Log "Symlink $Target -> $Source already exists, skipping."
-            return
+# Function to add required Scoop buckets
+function Add-ScoopBuckets {
+    $RequiredBuckets = @("main", "extras", "nerd-fonts")
+    foreach ($Bucket in $RequiredBuckets) {
+        if (-not (scoop bucket list | Select-String $Bucket)) {
+            Write-Host "Adding Scoop bucket: $Bucket"
+            scoop bucket add $Bucket
         } else {
-            # Backup old file/dir
-            $backup = "$Target.backup.$((Get-Date).ToString('yyyyMMddHHmmss'))"
-            Write-Log "Backing up existing $Target to $backup"
-            Move-Item $Target $backup
+            Write-Host "Scoop bucket '$Bucket' is already added."
         }
     }
-    # Make parent dir if needed
-    $parent = Split-Path $Target
-    if (-not (Test-Path $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }
-    # Create symlink
-    New-Item -ItemType SymbolicLink -Path $Target -Target $Source | Out-Null
-    Write-Log "Created symlink: $Target -> $Source"
 }
-if (Test-Path $LocationsFile) {
-    Write-Highlight "Creating symlinks per $LocationsFile..."
-    Get-Content $LocationsFile | ForEach-Object {
-        $line = $_.Trim()
-        if ($line -and -not ($line.StartsWith("#"))) {
-            $parts = $line -split '\s+', 2
-            if ($parts.Length -eq 2) {
-                $Target = $parts[0] -replace '%USERPROFILE%', $env:USERPROFILE
-                $Source = $parts[1] -replace '%DOTFILES%', $WindowsDotfilesDir
-                New-SafeSymlink -Target $Target -Source $Source
+
+# Function to install packages from packages.txt
+function Install-Packages {
+    if (Test-Path $PackagesFile) {
+        $Packages = Get-Content $PackagesFile | Where-Object { $_ -and -not $_.StartsWith("#") }
+        foreach ($Package in $Packages) {
+            if (-not (scoop list | Select-String $Package)) {
+                Write-Host "Installing package: $Package"
+                scoop install $Package
+            } else {
+                Write-Host "Package '$Package' is already installed."
             }
         }
+    } else {
+        Write-Host "packages.txt not found at $PackagesFile"
     }
-} else {
-    Write-Host "locations.txt file not found at $LocationsFile, skipping symlinks." -ForegroundColor Yellow
 }
 
-# ------------- STEP 8: Done! -------------
-Write-Highlight "Bootstrapping is complete!"
+# Function to create symlinks from links.prop
+function Create-Symlinks {
+    if (Test-Path $LinksProp) {
+        $Lines = Get-Content $LinksProp | Where-Object { $_ -and -not $_.StartsWith("#") }
+        foreach ($Line in $Lines) {
+            $Parts = $Line -split "="
+            if ($Parts.Count -eq 2) {
+                $Source = $Parts[0].Trim()
+                $Destination = $Parts[1].Trim() -replace "%USERPROFILE%", $env:USERPROFILE
 
+                if (Test-Path $Destination) {
+                    Write-Host "Destination '$Destination' already exists. Skipping."
+                } else {
+                    $DestinationDir = Split-Path $Destination
+                    if (-not (Test-Path $DestinationDir)) {
+                        New-Item -ItemType Directory -Path $DestinationDir -Force | Out-Null
+                    }
+                    New-Item -ItemType SymbolicLink -Path $Destination -Target $Source | Out-Null
+                    Write-Host "Created symlink: $Destination -> $Source"
+                }
+            }
+        }
+    } else {
+        Write-Host "links.prop not found at $LinksProp"
+    }
+}
+
+# Main script execution
+Install-Git
+Clone-Dotfiles
+Install-PowerShell7
+Enable-DeveloperMode
+Install-Scoop
+Add-ScoopBuckets
+Install-Packages
+Create-Symlinks
+
+Write-Host "Bootstrap process completed successfully."
 Write-Host @"
-What's next?
+================================================================================
+ BOOTSTRAP COMPLETE!
+================================================================================
 
-- If prompted above, set PowerShell 7 (`pwsh`) as your default shell in Windows Terminal.
-- Review any .backup.* files if your old configs were preserved.
-- To rerun this setup later, just launch PowerShell 7 and re-run this script.
+What’s next?
 
-Full log: $LogFile
+• If you were prompted above to log out, reboot, or restart PowerShell, do so now, then re-run this script.
+• If you just finished, you can:
+    – Set PowerShell 7 (pwsh) as your default shell in Windows Terminal, if desired.
+    – Check that all your favorite tools and configurations are working as expected.
+    – Review any '.backup.*' files created in your config folders (these are backups of previous versions).
+    – If you run into any errors, check the log file at: $env:USERPROFILE\dotfiles-setup.log
+
+You can safely re-run this script at any time—it will only install or update what’s missing.
+
+Enjoy your new environment!
 "@ -ForegroundColor Cyan
 
 exit 0
