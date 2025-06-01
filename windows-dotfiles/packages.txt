@@ -10,6 +10,7 @@ glow
 grep
 lsd
 llvm
+mingw
 ripgrep
 speedtest-cli
 win32yank
