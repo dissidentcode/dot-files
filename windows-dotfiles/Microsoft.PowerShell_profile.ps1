@@ -1,5 +1,4 @@
 
-Write-Host "Sourcing profile: $PROFILE" -ForegroundColor Cyan
 # Microsoft.PowerShell_profile.ps1 - Auto-generated
 $dotDir = "$HOME\.powershell"
 if (Test-Path "$dotDir\aliases.ps1") { . "$dotDir\aliases.ps1" }
