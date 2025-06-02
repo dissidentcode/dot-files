@@ -252,29 +252,43 @@ function youtube() {
 function torrent() {
   local label=$1
   local infohash=$2
-  local base_dir="/Users/nate/Downloads/torrents"
+  local base_dir="$HOME/Downloads/torrents"
 
-  if [ -z "$label" ] || [ -z "$infohash" ]; then
+  if [[ -z "$label" || -z "$infohash" ]]; then
     echo "Error: Please provide both a label and an info hash"
     return 1
   fi
 
-  # Fetch the tracker list from the new source
-  local trackers="$(curl -s https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all_https.txt)"
-  trackers=$(printf '%s' "$trackers" | awk '{ printf "&tr="; printf "%s", $0 }')
-  trackers=${trackers//:/\%3A}
-  trackers=${trackers//\//\%2F}
+  # Helper function for URL encoding (pure zsh)
+  urlencode() {
+    local s="$1"
+    local out=""
+    local i c
+    for (( i = 1; i <= ${#s}; i++ )); do
+      c="${s[i]}"
+      if [[ "$c" =~ [a-zA-Z0-9.~_-] ]]; then
+        out+="$c"
+      else
+        out+=$(printf '%%%02X' "'$c")
+      fi
+    done
+    echo "$out"
+  }
+
+  # Fetch, clean, and encode trackers
+  local trackers=""
+  while IFS= read -r tracker; do
+    [[ -z "$tracker" ]] && continue
+    trackers+="&tr=$(urlencode "$tracker")"
+  done < <(curl -s https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all_https.txt)
 
   local magnet_link="magnet:?xt=urn:btih:$infohash$trackers"
   local target_dir="${base_dir}/${label}"
   local log_file="${target_dir}/log.txt"
 
-  # Create the target directory if it doesn't exist
   mkdir -p "$target_dir"
 
-  # Check if the info hash already exists in the log file
   if ! grep -q "$infohash" "$log_file" 2>/dev/null; then
-    # Append the info hash, magnet link, and label to the log file
     {
       echo "----------------------------------------"
       echo ""
@@ -291,21 +305,83 @@ function torrent() {
     } >>"$log_file"
   fi
 
-  # Start or resume the torrent download with aria2 using optimized settings
-  aria2c \
-    -d "$target_dir" \
-    --bt-save-metadata=true \
-    --bt-max-peers=200 \
-    --bt-request-peer-speed-limit=1M \
-    --bt-tracker-connect-timeout=5 \
-    --bt-tracker-interval=120 \
-    --bt-detach-seed-only=true \
-    --split=64 \
-    --max-connection-per-server=16 \
-    --min-split-size=1M \
-    --seed-time=0 \
-    "$magnet_link"
+aria2c \
+  -d "$target_dir" \
+  --bt-save-metadata=true \
+  --bt-max-peers=200 \
+  --bt-request-peer-speed-limit=1M \
+  --bt-tracker-connect-timeout=5 \
+  --bt-tracker-interval=120 \
+  --bt-detach-seed-only=true \
+  --split=64 \
+  --max-connection-per-server=16 \
+  --min-split-size=1M \
+  --seed-time=0 \
+  --enable-dht=true \
+  --enable-peer-exchange=true \
+  --bt-enable-lpd=true \
+  --listen-port=51413 \
+  "$magnet_link"
 }
+
+
+#function torrent() {
+#  local label=$1
+#  local infohash=$2
+#  local base_dir="/Users/nate/Downloads/torrents"
+#
+#  if [ -z "$label" ] || [ -z "$infohash" ]; then
+#    echo "Error: Please provide both a label and an info hash"
+#    return 1
+#  fi
+#
+#  # Fetch the tracker list from the new source
+#  local trackers="$(curl -s https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all_https.txt)"
+#  trackers=$(printf '%s' "$trackers" | awk '{ printf "&tr="; printf "%s", $0 }')
+#  trackers=${trackers//:/\%3A}
+#  trackers=${trackers//\//\%2F}
+#
+#  local magnet_link="magnet:?xt=urn:btih:$infohash$trackers"
+#  local target_dir="${base_dir}/${label}"
+#  local log_file="${target_dir}/log.txt"
+#
+#  # Create the target directory if it doesn't exist
+#  mkdir -p "$target_dir"
+#
+#  # Check if the info hash already exists in the log file
+#  if ! grep -q "$infohash" "$log_file" 2>/dev/null; then
+#    # Append the info hash, magnet link, and label to the log file
+#    {
+#      echo "----------------------------------------"
+#      echo ""
+#      echo "Label: $label"
+#      echo ""
+#      echo "Date: $(date +"%A %m/%d/%Y %I:%M %p")"
+#      echo ""
+#      echo "Info Hash: $infohash"
+#      echo ""
+#      echo "Magnet Link: $magnet_link"
+#      echo ""
+#      echo "----------------------------------------"
+#      echo ""
+#    } >>"$log_file"
+#  fi
+#
+#  # Start or resume the torrent download with aria2 using optimized settings
+#  aria2c \
+#    -d "$target_dir" \
+#    --bt-save-metadata=true \
+#    --bt-max-peers=200 \
+#    --bt-request-peer-speed-limit=1M \
+#    --bt-tracker-connect-timeout=5 \
+#    --bt-tracker-interval=120 \
+#    --bt-detach-seed-only=true \
+#    --split=64 \
+#    --max-connection-per-server=16 \
+#    --min-split-size=1M \
+#    --seed-time=0 \
+#    "$magnet_link"
+#}
 
 shorturl() {
   if [[ -z "$1" ]]; then
