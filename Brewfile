@@ -35,8 +35,6 @@ brew "docker"
 brew "duf"
 # More intuitive version of du in rust
 brew "dust"
-# Modern replacement for 'ls'
-brew "exa"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
@@ -59,6 +57,8 @@ brew "gh"
 brew "gifsicle"
 # Distributed revision control system
 brew "git"
+# Simple terminal UI for git commands
+brew "lazygit"
 # Render markdown on the CLI
 brew "glow"
 # Open source programming language to build simple/reliable/efficient software
@@ -119,6 +119,8 @@ brew "ripgrep"
 brew "speedtest-cli"
 # Cross-shell prompt for astronauts
 brew "starship"
+# Magical shell history
+brew "atuin"
 # Change macOS audio source from the command-line
 brew "switchaudio-osx"
 # Very fast implementation of tldr in Rust
@@ -161,8 +163,6 @@ cask "aerospace"
 cask "aldente"
 # Enable Windows-like alt-tab
 cask "alt-tab"
-# Tool to list all active shortcuts of the current application
-cask "cheatsheet"
 # Colour picker
 cask "colorsnapper"
 # Photography workflow application and raw developer
@@ -180,6 +180,7 @@ cask "rar"
 cask "sf-symbols"
 # GPU-accelerated cross-platform terminal emulator and multiplexer
 cask "wezterm"
+mas "Hidden Bar", id: 1452453066
 mas "CleanMyMac", id: 1339170533
 mas "Dropover", id: 1355679052
 mas "Keynote", id: 409183694
