@@ -24,7 +24,7 @@ function acp() {
   git commit -m "$message"
 
   # Push the changes to the master branch
-  git push origin master
+  git push origin HEAD
 }
 
 ## NETWORK FUNCTIONS##

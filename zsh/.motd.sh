@@ -83,23 +83,51 @@ used_memory=$(echo "scale=2; $used_memory_pages * $page_size / 1024 / 1024 / 102
 memory_percentage=$(echo "scale=2; $used_memory / $total_memory * 100" | bc)
 # Ascii art and system info
 echo ""
-echo "               ${white}.:^mmmmm^:${reset}              ""    ${magenta}dMMMMMP${reset}  ${bmagenta}.dMMMb   dMP dMP${reset}   "
-echo "           ${white}^7YG#&@@@@@@@&B57:${reset}          ""     ${magenta}.dMP\"${reset}  ${bmagenta}dMP\" VP  dMP dMP${reset}  "
-echo "        ${white}^JB@@@@@@@@@@@@@@@@@&G7.${reset}       ""   ${magenta}.dMP\"${reset}    ${bmagenta}VMMMb   dMMMMMP${reset}    "
-echo "      ${white}^5@@@@@@@@@@@@@@@@@@@@@@@B7${reset}      "" ${magenta}.dMP\"${reset}    ${bmagenta}dP .dMP  dMP dMP${reset}     "
-echo "     ${white}J@@@@@@@@@@@@@@@@@@@@@@@@@@@5${reset}     ""${magenta}dMMMMMP${reset}  ${bmagenta}VMMMP\"   dMP dMP${reset}  ${bblack}dMMMMMMP${reset}"
-echo "    ${white}5@@@@@@@@@@@@@@@@@@@@@@@@#B&B@~    ""${blue}Hardware:${reset} ${bblue}$(sysctl -n hw.model)${reset}"                                  # Hardware
-echo "   ${white}?@@@@@@@@@@@@@@@@@@@@@@@@&:J@~:.    ""${blue}OS:${reset} ${bblue}$(sw_vers -productName) $(sw_vers -productVersion)${reset}"           # OS
-echo "  ${white}.#@@@@@@@@@@@@@@@@@@@@@@@J^ JY:      ""${blue}CPU:${reset} ${bblue}$(sysctl -n machdep.cpu.brand_string)${reset} "                      # CPU
-echo " ${white}:P&&&@@@@@@@@@@@@@@@@#GBP~            ""${blue}Shell:${reset} ${bblue}$(basename "$SHELL")${reset}"                                      # Shell
-echo " ${white}~!   7B@@@@@##&@@@@#^.                ""${blue}Terminal:${reset} ${bblue}${TERM_PROGRAM}${reset}"                                        # User
-echo " ${white}?P   :@@@&~    YB#^|.                 ""${blue}Local Host:${reset} ${bblue}$(scutil --get LocalHostName)${reset}"                        # Host
-echo " ${white}P&?L. ~7B@&.    \`:7!                  ""${blue}Diskspace:${reset} ${bblue}${disk_info}${reset}"                                         # Diskspace
-echo "${white}:#&@B~7: \Y@~ .    .#@7                ""${blue}Uptime:${reset} ${bblue}$(uptime | awk -F'up ' '{print $2}' | cut -d',' -f1-2)${reset}"   # Uptime
-echo "  ${white}!PY5?   .G&5BBG7J7P@@7               ""${blue}Memory:${reset} ${bblue}$used_memory GB / $total_memory GB ($memory_percentage%)${reset}" # Memory
-echo "    ${white}5@Y ;  :@@P555B@@@P                ""${blue}Battery:${reset} ${bblue}${battery_info}${reset}"                                         # Battery percentage
-echo "     ${white}5@G?J!J@B!:  ^G5J^                ""${blue}Font:${reset} ${bblue}${font}${reset}"                                                    # Font
-echo "     ${white}~PB#&@BJ~^:                       ""${BG_BWHITE}    ${BG_BMAGENTA}    ${BG_BRED}    ${BG_BYELLOW}    ${BG_BBLUE}    ${BG_BCYAN}    ${BG_BGREEN}    ${BG_BBLACK}    ${RESET}"
-echo "       ${white}iUN7.                           ""${BG_WHITE}    ${BG_MAGENTA}    ${BG_RED}    ${BG_YELLOW}    ${BG_BLUE}    ${BG_CYAN}    ${BG_GREEN}    ${BG_BLACK}    ${RESET}"
+echo "               ${white}.:^mmmmm^:${reset}             ""    ${magenta}dMMMMMP${reset}  ${bmagenta}.dMMMb   dMP dMP${reset}   "
+echo "           ${white}^7YG#&@@@@@@@&B57:${reset}         ""     ${magenta}.dMP\"${reset}  ${bmagenta}dMP\" VP  dMP dMP${reset}  "
+echo "        ${white}^JB@@@@@@@@@@@@@@@@@&G7.${reset}      ""   ${magenta}.dMP\"${reset}    ${bmagenta}VMMMb   dMMMMMP${reset}    "
+echo "      ${white}^5@@@@@@@@@@@@@@@@@@@@@@@B7${reset}     "" ${magenta}.dMP\"${reset}    ${bmagenta}dP .dMP  dMP dMP${reset}     "
+echo "     ${white}J@@@@@@@@@@@@@@@@@@@@@@@@@@@5${reset}    ""${magenta}dMMMMMP${reset}  ${bmagenta}VMMMP\"   dMP dMP${reset}  ${white}dMMMMMMP${reset}"
+echo "    ${white}5@@@@@@@@@@@@@@@@@@@@@@@@#B&B@~   ""${blue}Hardware:${reset} ${bblue}$(sysctl -n hw.model)${reset}"                                  # Hardware
+echo "   ${white}?@@@@@@@@@@@@@@@@@@@@@@@@&:J@~:.   ""${blue}OS:${reset} ${bblue}$(sw_vers -productName) $(sw_vers -productVersion)${reset}"           # OS
+echo "  ${white}.#@@@@@@@@@@@@@@@@@@@@@@@J^ JY:     ""${blue}CPU:${reset} ${bblue}$(sysctl -n machdep.cpu.brand_string)${reset} "                      # CPU
+echo " ${white}:P&&&@@@@@@@@@@@@@@@@#GBP~           ""${blue}Shell:${reset} ${bblue}$(basename "$SHELL")${reset}"                                      # Shell
+echo " ${white}~!   7B@@@@@##&@@@@#^.               ""${blue}Terminal:${reset} ${bblue}${TERM_PROGRAM}${reset}"                                        # User
+echo " ${white}?P   :@@@&~    YB#^|.                ""${blue}Local Host:${reset} ${bblue}$(scutil --get LocalHostName)${reset}"                        # Host
+echo " ${white}P&?L. ~7B@&.    \`:7!                 ""${blue}Diskspace:${reset} ${bblue}${disk_info}${reset}"                                         # Diskspace
+echo "${white}:#&@B~7: \Y@~ .    .#@7               ""${blue}Uptime:${reset} ${bblue}$(uptime | awk -F'up ' '{print $2}' | cut -d',' -f1-2)${reset}"   # Uptime
+echo "  ${white}!PY5?   .G&5BBG7J7P@@7              ""${blue}Memory:${reset} ${bblue}$used_memory GB / $total_memory GB ($memory_percentage%)${reset}" # Memory
+echo "    ${white}5@Y ;  :@@P555B@@@P               ""${blue}Battery:${reset} ${bblue}${battery_info}${reset}"                                         # Battery percentage
+echo "     ${white}5@G?J!J@B!:  ^G5J^               ""${blue}Font:${reset} ${bblue}${font}${reset}"                                                    # Font
+echo "     ${white}~PB#&@BJ~^:                      ""${BG_BWHITE}    ${BG_BMAGENTA}    ${BG_BRED}    ${BG_BYELLOW}    ${BG_BBLUE}    ${BG_BCYAN}    ${BG_BGREEN}    ${BG_BBLACK}    ${RESET}"
+echo "       ${white}iUN7.                          ""${BG_WHITE}    ${BG_MAGENTA}    ${BG_RED}    ${BG_YELLOW}    ${BG_BLUE}    ${BG_CYAN}    ${BG_GREEN}    ${BG_BLACK}    ${RESET}"
 echo ""
 echo ""
+
+#echo ""
+#echo "         ${white}.=+++=:${reset}              ""    ${magenta}dMMMMMP${reset}  ${bmagenta}.dMMMb   dMP dMP${reset}   "
+#echo "     ${white}::            .--${reset}        ""     ${magenta}.dMP\"${reset}  ${bmagenta}dMP\" VP  dMP dMP${reset}  "
+#echo "   ${white}:                   +-${reset}     ""   ${magenta}.dMP\"${reset}    ${bmagenta}VMMMb   dMMMMMP${reset}    "
+#echo "  ${white}-                       =${reset}   "" ${magenta}.dMP\"${reset}    ${bmagenta}dP .dMP  dMP dMP${reset}     "
+#echo " ${white}:.                     +  *${reset}  ""${magenta}dMMMMMP${reset}  ${bmagenta}VMMMP\"   dMP dMP${reset}  ${bblack}dMMMMMMP${reset}"
+#echo " ${white}%        .    #@@@-   -#  =+${reset} ""${blue}Hardware:${reset} ${bblue}$(sysctl -n hw.model)${reset}"                                  # Hardware
+#echo "${white}:=  #@@@=     @@%@@@@@@ -   #${reset} ""${blue}OS:${reset} ${bblue}$(sw_vers -productName) $(sw_vers -productVersion)${reset}"           # OS
+#echo "${white}: #%@@@@@*:  -+@@@@@@@@* - =#${reset} ""${blue}CPU:${reset} ${bblue}$(sysctl -n machdep.cpu.brand_string)${reset} "                      # CPU
+#echo "${white}: =*@@@@@@@@+ .*@@@@@@@*   :%${reset} ""${blue}Shell:${reset} ${bblue}$(basename "$SHELL")${reset}"                                      # Shell
+#echo "${white}. =%@@@: @@@@*   -#@@@#.  ==%${reset} ""${blue}Terminal:${reset} ${bblue}${TERM_PROGRAM}${reset}"                                        # Terminal
+#echo "${white}:       *@@@@@             @%${reset} ""${blue}Local Host:${reset} ${bblue}$(scutil --get LocalHostName)${reset}"                        # Host
+#echo "${white}.     :  .-++.   .       .%@#${reset} ""${blue}Diskspace:${reset} ${bblue}${disk_info}${reset}"                                         # Diskspace
+#echo "${white}-.*  *#- +.= -.=- #@%#++=.@@+${reset} ""${blue}Uptime:${reset} ${bblue}$(uptime | awk -F'up ' '{print $2}' | cut -d',' -f1-2)${reset}"   # Uptime
+#echo " ${white}-@#@%@= - +:*:. ..@@@@+@@@@*${reset} ""${blue}Memory:${reset} ${bblue}$used_memory GB / $total_memory GB ($memory_percentage%)${reset}" # Memory
+#echo "  ${white}@@+@@.@@@@@@@%@%@@@@@*@=@@-${reset} ""${blue}Battery:${reset} ${bblue}${battery_info}${reset}"                                         # Battery percentage
+#echo "  ${white}-@@@@@@@@@@@@@@@@@@@@= @@${reset}   ""${blue}Font:${reset} ${bblue}${font}${reset}"                                                    # Font
+#echo "    ${white}#@@@@@@@@@@@@@@@@@@..*${reset}    ""${BG_BWHITE}    ${BG_BMAGENTA}    ${BG_BRED}    ${BG_BYELLOW}    ${BG_BBLUE}    ${BG_BCYAN}    ${BG_BGREEN}    ${BG_BBLACK}    ${RESET}"
+#echo "    ${white}#=%@@@@@@@@@@@@@@@+=@${reset}     ""${BG_WHITE}    ${BG_MAGENTA}    ${BG_RED}    ${BG_YELLOW}    ${BG_BLUE}    ${BG_CYAN}    ${BG_GREEN}    ${BG_BLACK}    ${RESET}"
+#echo "     ${white}#*% @@@@@@% @@-*% -%${reset}     "
+#echo "     ${white}*@*. - :: ..-*+@  =#${reset}     "
+#echo "     ${white}*@*:::.*:.  = +.  @${reset}      "
+#echo "      ${white}@#  :=:        .@${reset}       "
+#echo "       ${white}@=    :     :#=${reset}        "
+#echo "            ${white}--:+:${reset}             "
+#echo ""
+#echo ""
