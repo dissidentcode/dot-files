@@ -116,11 +116,11 @@ source ~/.zsh/.functions.sh # Load a custom functions script
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
 
-bwhite=
-
-# Fetch and display Quote of the Day
-quote_of_the_day=$(curl -s "https://zenquotes.io/api/today" | jq -r '.[0].q')
-echo "${bwhite}Quote of the day:${reset}${yellow}$quote_of_the_day"${reset}
+#bwhite=
+#
+## Fetch and display Quote of the Day
+#quote_of_the_day=$(curl -s "https://zenquotes.io/api/today" | jq -r '.[0].q')
+#echo "${bwhite}Quote of the day:${reset}${yellow}$quote_of_the_day"${reset}
 
 source ~/.zsh/.motd.sh      # Load a custom message of the day script
 
@@ -133,3 +133,4 @@ function y() {
   fi
   rm -f -- "$tmp"
 }
+export PATH="$HOME/.local/bin:$PATH"

@@ -1,5 +1,6 @@
 ## ALIASES ##
 alias nvalias='nvim ~/.zsh/.alias.sh'
+alias ccdsp='claude --dangerously-skip-permissions'
 alias nvfunctions='nvim ~/.zsh/.functions.sh'
 alias nvzshrc='nvim ~/.zshrc'
 alias ..='cd ..'

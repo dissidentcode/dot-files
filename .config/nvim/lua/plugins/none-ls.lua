@@ -39,7 +39,7 @@ return {
       },
     })
 
-    vim.keymap.set("n", "<leader>gf", function()
+    vim.keymap.set("n", "<leader>f", function()
       vim.lsp.buf.format({
         filter = function(client)
           return client.name == "null-ls"
