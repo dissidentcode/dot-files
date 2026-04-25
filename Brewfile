@@ -1,14 +1,7 @@
-tap "felixkratz/formulae"
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 tap "jstkdng/programs"
 tap "nikitabobko/tap"
-# All-in-one AI-Powered CLI Chat & Copilot
-brew "aichat"
-# Automate deployment, configuration, and upgrading
-brew "ansible"
-# Download with resuming and segmented downloading
-brew "aria2"
 # Archival front-end
 brew "atool"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -25,8 +18,6 @@ brew "chafa"
 brew "cointop"
 # Color-highlighted diff(1) output
 brew "colordiff"
-# Shell script to build fancy DMGs
-brew "create-dmg"
 # Good-lookin' diffs with diff-highlight and more
 brew "diff-so-fancy"
 # Pack, ship and run any application as a lightweight container
@@ -39,14 +30,8 @@ brew "dust"
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
-# Identify or delete duplicate files
-brew "fdupes"
-# OCR (Optical Character Recognition) engine
-brew "tesseract"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
-# I/O benchmark and stress test
-brew "fio"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # GNU awk utility
@@ -61,8 +46,6 @@ brew "git"
 brew "lazygit"
 # Render markdown on the CLI
 brew "glow"
-# Open source programming language to build simple/reliable/efficient software
-brew "go"
 # Powerful, lightweight programming language
 brew "lua"
 # Convert source code to formatted text with syntax highlighting
@@ -97,8 +80,6 @@ brew "neovim"
 brew "nload"
 # Platform built on V8 to build network applications
 brew "node"
-# Retrieves currently playing media, and simulates media actions
-brew "nowplaying-cli"
 # Command-line Git information tool
 brew "onefetch"
 # PNG file optimizer
@@ -121,8 +102,6 @@ brew "speedtest-cli"
 brew "starship"
 # Magical shell history
 brew "atuin"
-# Change macOS audio source from the command-line
-brew "switchaudio-osx"
 # Very fast implementation of tldr in Rust
 brew "tealdeer"
 # Powerful free data recovery utility
@@ -137,8 +116,6 @@ brew "tree"
 brew "unar"
 # Simple terminal image viewer written in Rust
 brew "viu"
-# Pager/text based browser
-brew "w3m"
 # Show the current WiFi network password
 brew "wifi-password"
 # Blazing fast terminal file manager written in Rust, based on async I/O
@@ -151,22 +128,10 @@ brew "z"
 brew "zip"
 # UNIX shell (command interpreter)
 brew "zsh"
-# A window border system for macOS
-brew "felixkratz/formulae/borders"
-# Custom macOS statusbar with shell plugin, interaction and graph support
-brew "felixkratz/formulae/sketchybar"
 # Drop in replacement for ueberzug written in C++
 brew "jstkdng/programs/ueberzugpp"
-# AeroSpace is an i3-like tiling window manager for macOS
-cask "aerospace"
 # Menu bar tool to limit maximum charging percentage
 cask "aldente"
-# Enable Windows-like alt-tab
-cask "alt-tab"
-# Colour picker
-cask "colorsnapper"
-# Photography workflow application and raw developer
-cask "darktable"
 cask "font-fira-code"
 cask "font-hack-nerd-font"
 cask "font-monaspace"
@@ -183,29 +148,5 @@ cask "wezterm"
 mas "Hidden Bar", id: 1452453066
 mas "CleanMyMac", id: 1339170533
 mas "Dropover", id: 1355679052
-mas "Keynote", id: 409183694
 mas "Microsoft Outlook", id: 985367838
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
 mas "Xcode", id: 497799835
-vscode "alefragnani.project-manager"
-vscode "bradlc.vscode-tailwindcss"
-vscode "dbaeumer.vscode-eslint"
-vscode "drmerfy.overtype"
-vscode "ecmel.vscode-html-css"
-vscode "esbenp.prettier-vscode"
-vscode "formulahendry.auto-close-tag"
-vscode "github.vscode-pull-request-github"
-vscode "glenn2223.live-sass"
-vscode "kamikillerto.vscode-colorize"
-vscode "monokai.theme-monokai-pro-vscode"
-vscode "ms-azuretools.vscode-docker"
-vscode "pkief.material-icon-theme"
-vscode "pranaygp.vscode-css-peek"
-vscode "ritwickdey.liveserver"
-vscode "streetsidesoftware.code-spell-checker"
-vscode "syler.sass-indented"
-vscode "visualstudioexptteam.intellicode-api-usage-examples"
-vscode "visualstudioexptteam.vscodeintellicode"
-vscode "wallabyjs.quokka-vscode"
-vscode "xabikos.javascriptsnippets"
