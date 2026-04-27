@@ -1,0 +1,10 @@
+# macOS metadata
+.DS_Store
+
+# Stray script(1) recordings
+typescript
+
+# Editor temp/swap files
+*.swp
+*.bak
+*~

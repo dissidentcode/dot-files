@@ -10,8 +10,6 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias home='~'
 alias root='/'
-alias ave='ansible-vault encrypt'
-alias avd='ansible-vault decrypt'
 alias _='sudo '
 alias ga='git add'
 alias gs='git status'
@@ -19,7 +17,7 @@ alias gc='git commit -m'
 alias gp='git push origin'
 alias gd='git diff'
 alias rm='rm -v -I'
-alias c="clear && neofetch"
+alias c="clear && fastfetch"
 alias r='clear && source ~/.zshrc'
 alias grepa='alias | grep $1'
 alias grep='grep --color=auto'
@@ -42,8 +40,6 @@ alias llf='eza -lXhmUfa --icons --git --no-user --color-scale-mode=gradient --no
 alias l2='eza --tree --level 2 --all --icons'
 alias l3='eza --tree --level 3 --all --icons'
 alias l4='eza --tree --level 4 --all --icons'
-#open aichat history in vscode
-alias chathistory='code $HOME/Library/Application\ Support/aichat/messages.md'
 #check network speed/quality
 alias speedtest='speedtest-cli'
 #copy to clipboard (paste board)
@@ -52,10 +48,10 @@ alias pb='pbcopy'
 alias notes="cd '$HOME/Personal/Logseq-PKB'"
 #Git repos directory shortcut
 alias repos="cd ~/git_repos"
-#dot-files directory
-alias dots="cd ~/git_repos/dot-files"
-#zsh scripts directory
-alias zshscripts="cd ~/git_repos/dot-files/zsh/.zsh-scripts"
+#dot-files directory (cloned by setup.sh to ~/.dotfiles)
+alias dots="cd ~/.dotfiles"
+#zsh scripts directory (symlinked by setup.sh)
+alias zshscripts="cd ~/.zsh-scripts"
 #scripts directory
 alias scripts="cd ~/scripts"
 #.zsh directory

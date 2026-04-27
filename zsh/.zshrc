@@ -33,8 +33,8 @@ source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Load auto-suggestions, which provides suggestions for commands as you type based on command history
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# Load 'z', which tracks your most visited directories and allows quick navigation to them
-source $(brew --prefix)/etc/profile.d/z.sh
+# Smarter cd that tracks visited directories (replaces z)
+eval "$(zoxide init zsh)"
 
 # Set up fzf keybindings and fuzzy completion
 source <(fzf --zsh)
@@ -115,6 +115,12 @@ source ~/.zsh/.alias.sh     # Load a custom aliases script
 source ~/.zsh/.functions.sh # Load a custom functions script
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
+
+# Smart shell history search (Ctrl-R) — replaces atuin
+eval "$(mcfly init zsh)"
+
+# Polyglot runtime version manager
+eval "$(mise activate zsh)"
 
 #bwhite=
 #

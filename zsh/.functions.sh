@@ -110,11 +110,11 @@ symlink_dir() {
   echo "🔗 Symlinked: $link_path → $real_path"
 }
 
-#fzf with preview functionality using lf preview script
+#fzf with preview functionality (uses ~/.zsh-scripts/preview.sh, symlinked by setup.sh)
 fp() {
   local file choice
 
-  file=$(fzf --preview '~/git_repos/dot-files/zsh/.zsh-scripts/preview.sh {} 2>/dev/null' --preview-window=right:60%) || return
+  file=$(fzf --preview '~/.zsh-scripts/preview.sh {} 2>/dev/null' --preview-window=right:60%) || return
 
   if [ -n "$file" ]; then
     echo ""
@@ -166,7 +166,7 @@ h() {
 
 #fp() {
 
-#  fzf --preview '~/git_repos/dot-files/zsh/.zsh-scripts/preview.sh {}' --preview-window=right:60%
+#  fzf --preview '~/.zsh-scripts/preview.sh {}' --preview-window=right:60%
 #}
 
 #function symlink() {
@@ -229,7 +229,7 @@ function optpng() {
   ~/.zsh-scripts/.optimize-png.sh "$@"
 }
 
-source ~/git_repos/makegif/makegif.sh
+[[ -f ~/git_repos/makegif/makegif.sh ]] && source ~/git_repos/makegif/makegif.sh
 
 # Searching the web
 
