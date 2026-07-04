@@ -134,3 +134,13 @@ _Result_
 The file, zsh-colors.itermcolors, is to load the colors I use into iTerm2. Feel free to use your own, but I figured I'd include this as well to avoid any legibility or contrast issues on your machine. The less tweaking, the better, right? Just import them from this 'color presets' menu in iTerm2 settings.
 
 ![iTerm2 color palette import image](/assets/iterm-colors.png)
+
+## macOS system defaults (`scripts/macos-defaults.sh`)
+
+A one-shot script that applies the Finder, Dock, keyboard, and screenshot tweaks I want on a fresh Mac. Everything in it is a `defaults write`, so it's idempotent — run it as many times as you like:
+
+```zsh
+./scripts/macos-defaults.sh
+```
+
+Highlights: the Dock reveals instantly on hover, Finder shows the Path Bar and status bar and defaults to list view, hidden files are visible, key repeat is fast (with hold-to-repeat instead of the accent picker), and screenshots land in `~/Pictures/Screenshots`. Finder and the Dock restart at the end; the keyboard settings finish applying after a logout. Undo any single setting with `defaults delete <domain> <key>`.

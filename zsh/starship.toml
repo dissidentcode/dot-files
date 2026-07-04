@@ -2,9 +2,9 @@ format = """
 $os\
 [](fg:#d455d6 bg:bright-red)\
 $shell\
-[](fg:bright-red bg:bright-yellow)\
+[](fg:bright-red bg:#d75f00)\
 $battery\
-[](fg:bright-yellow bg:yellow)\
+[](fg:#d75f00 bg:yellow)\
 $custom\
 [](fg:yellow bg:blue)\
 $directory\
@@ -62,7 +62,7 @@ format = '[ $indicator ]($style)'
 
 [[battery.display]]
 threshold = 40
-style = "fg:#FFFFFF bg:bright-yellow"
+style = "fg:#FFFFFF bg:#d75f00"
 
 [battery]
 charging_symbol = ''

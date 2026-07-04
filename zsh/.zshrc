@@ -62,7 +62,7 @@ export KEYTIMEOUT=1
 
 # Load and initialize the completion system, providing options and file paths predictions
 autoload -Uz compinit
-compinit
+compinit -u
 _comp_options+=(globdots) #include hidden files
 
 # Configure how command completions are displayed and navigated
@@ -140,3 +140,6 @@ function y() {
   rm -f -- "$tmp"
 }
 export PATH="$HOME/.local/bin:$PATH"
+
+# GitHub MCP (claude-work github plugin) — resolve ${GITHUB_PERSONAL_ACCESS_TOKEN} from gh CLI keyring
+export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
