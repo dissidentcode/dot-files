@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+# Opens a herdr space in one of two layouts and switches the view to it.
+#
+# Default (one agent): two panes on top (files left, editor right) and one
+# wide agent pane on the bottom, all cleared of the message of the day.
+#
+# With -a N (several agents): each tab holds up to four agent panes stacked on
+# the left and one full-height pane on the right for you, cleared. More than
+# four agents get more tabs in the same space, four to a tab.
+#
+# Usage: herdr-space [-c] [-l LABEL] [-a AGENTS] [DIR]
+#   DIR        directory for every pane (default: ~/repos/claude-work)
+#   -l LABEL   space name in the sidebar (default: DIR's folder name)
+#   -a AGENTS  number of agents; prints one "agent N PANE_ID" line per agent
+#   -c         create DIR if it does not exist
+set -euo pipefail
+
+create=0
+label=""
+agents=0
+multi=0
+while getopts "cl:a:h" opt; do
+  case "$opt" in
+    c) create=1 ;;
+    l) label="$OPTARG" ;;
+    a) agents="$OPTARG"; multi=1 ;;
+    h) sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) exit 2 ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+if (( multi )) && [[ ! "$agents" =~ ^[1-9][0-9]*$ ]]; then
+  echo "herdr-space: -a needs a whole number of agents, 1 or more, got: $agents" >&2
+  exit 2
+fi
+
+dir="${1:-$HOME/repos/claude-work}"
+if [[ ! -d "$dir" ]]; then
+  if (( create )); then
+    mkdir -p "$dir"
+  else
+    echo "herdr-space: no such directory: $dir (pass -c to create it)" >&2
+    exit 1
+  fi
+fi
+dir="$(cd "$dir" && pwd)"
+label="${label:-$(basename "$dir")}"
+
+# Reads a herdr JSON reply on stdin and prints the value at jq path $1.
+field() {
+  local reply
+  reply="$(cat)"
+  jq -er "$1 // empty" <<<"$reply" || {
+    echo "herdr-space: unexpected reply from herdr: $reply" >&2
+    return 1
+  }
+}
+
+# Splits pane $1 in direction $2, the original keeping share $3; prints the new pane id.
+split() {
+  herdr pane split "$1" --direction "$2" --ratio "$3" --cwd "$dir" --no-focus |
+    field '.result.pane.pane_id'
+}
+
+if (( ! multi )); then
+  files="$(herdr workspace create --cwd "$dir" --label "$label" --no-focus |
+    field '.result.root_pane.pane_id')"
+  # Top row 45%, agent pane 55%.
+  agent="$(split "$files" down 0.45)"
+  editor="$(split "$files" right 0.5)"
+
+  for pane in "$files" "$editor" "$agent"; do
+    herdr pane run "$pane" clear >/dev/null
+  done
+
+  # Puts the cursor in the agent pane; herdr also switches the view to the space.
+  herdr pane focus --direction down --pane "$files" >/dev/null
+
+  echo "opened \"$label\" in $dir (files=$files editor=$editor agent=$agent)"
+  exit 0
+fi
+
+per_tab=4
+tabs=$(( (agents + per_tab - 1) / per_tab ))
+roots=()
+lines=()
+for (( t = 1; t <= tabs; t++ )); do
+  lo=$(( (t - 1) * per_tab + 1 ))
+  hi=$(( lo + per_tab - 1 ))
+  (( hi > agents )) && hi=$agents
+  if (( lo == hi )); then tab_label="agent $lo"; else tab_label="agents $lo-$hi"; fi
+
+  if (( t == 1 )); then
+    reply="$(herdr workspace create --cwd "$dir" --label "$label" --no-focus)"
+    space="$(field '.result.workspace.workspace_id' <<<"$reply")"
+    herdr tab rename "$(field '.result.tab.tab_id' <<<"$reply")" "$tab_label" >/dev/null
+  else
+    reply="$(herdr tab create --workspace "$space" --cwd "$dir" --label "$tab_label" --no-focus)"
+  fi
+  pane="$(field '.result.root_pane.pane_id' <<<"$reply")"
+  roots+=("$pane")
+
+  # Agents take the left 60%; the right 40% is the user's pane.
+  mine="$(split "$pane" right 0.6)"
+  herdr pane run "$mine" clear >/dev/null
+  lines+=("main $t $mine")
+
+  # Stack the agent panes in equal rows: each split keeps 1/remaining for the pane above.
+  for (( n = lo; n <= hi; n++ )); do
+    lines+=("agent $n $pane")
+    remaining=$(( hi - n + 1 ))
+    if (( remaining > 1 )); then
+      pane="$(split "$pane" down "$(awk "BEGIN { printf \"%.4f\", 1 / $remaining }")")"
+    fi
+  done
+done
+
+# Puts the cursor in the user's pane on every tab, last tab first, so the view
+# ends on the first tab; herdr switches the view to whatever is focused.
+for (( i = ${#roots[@]} - 1; i >= 0; i-- )); do
+  herdr pane focus --direction right --pane "${roots[i]}" >/dev/null
+done
+
+echo "opened \"$label\" in $dir ($agents agents, $tabs tabs)"
+printf '%s\n' "${lines[@]}"
