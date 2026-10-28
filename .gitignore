@@ -7,4 +7,5 @@ typescript
 # Editor temp/swap files
 *.swp
 *.bak
+*.bak-*
 *~
