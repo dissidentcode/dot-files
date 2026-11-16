@@ -60,6 +60,9 @@ alias zsh="cd ~/.zsh"
 alias trash='trash -F'
 #Flush DNS cache - password needed
 alias dnsflush='sudo killall -HUP mDNSResponder && sudo killall mDNSResponderHelper && sudo dscacheutil -flushcache'
+#Keep the Mac awake with the lid closed (agents keep running) - password needed; clamshelloff restores normal sleep
+alias clamshell='sudo pmset -a disablesleep 1 && { pmset -g | grep SleepDisabled || echo " SleepDisabled 0"; }'
+alias clamshelloff='sudo pmset -a disablesleep 0 && { pmset -g | grep SleepDisabled || echo " SleepDisabled 0"; }'
 #simplified 'du' with nice formatting
 alias dusage="du -hd 1 | sort -hr | awk 'BEGIN { print \"SIZE     DIRECTORY\"; print \"------------------\" } { print \$1, \$2 }'"
 #enhanced disk usage tool written in Rust; more intuitive than 'du' and avoids the UI aspect of 'ncdu'
